@@ -6,12 +6,12 @@ import utils.Commons;
 
 public class BreakoutGeneticAlgorithm {
 
-		private int seed = 141;
+		private int seed = 1324321;
 		private static final int POPULATION_SIZE = 100;
 		private static final int NUM_GENERATIONS = 500;
 		private double MUTATION_PERCENTAGE = 0.7;
 		private double MUTATION_RATE = .6;
-		private double SELECTION_PERCENTAGE = .15;
+		private double SELECTION_PERCENTAGE = .25;
 		private int K_TOURNAMENT = 5;
 
 
@@ -39,7 +39,8 @@ public class BreakoutGeneticAlgorithm {
 	    }
 	    
 	    private void getBest(BreakoutNeuralNetwork nn) {
-    		if(nn.getFitness() > champion.getFitness()) {
+			if(champion == null) champion = nn;
+    		else if(nn.getFitness() > champion.getFitness()) {
 				champion = nn;
 				System.out.println(champion);
 			}
@@ -52,15 +53,16 @@ public class BreakoutGeneticAlgorithm {
 
 	    private BreakoutNeuralNetwork search() {
 
-	    	champion = population[0];
 			int start = Math.max(2, (int) (POPULATION_SIZE * SELECTION_PERCENTAGE));
 
             for (int i = 0; i < NUM_GENERATIONS; i++) {
-				BreakoutNeuralNetwork[] newGeneration = new BreakoutNeuralNetwork[POPULATION_SIZE];
+
 				loadPopulationFitness();
+
 				Arrays.sort(population);
 
-				
+				BreakoutNeuralNetwork[] newGeneration = new BreakoutNeuralNetwork[POPULATION_SIZE];
+
 				if(i % 10 == 0)
 					System.out.println("Gen: " + i);
 		
