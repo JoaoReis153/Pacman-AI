@@ -13,7 +13,8 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     private double[][] outputWeights;
     private double[] outputBiases;
 
-    
+    private double fitness = 0.0;
+
     private int seed = Commons.SEED;
     
     public BreakoutNeuralNetwork(int seed) {
@@ -113,7 +114,7 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     
     @Override
 	public int nextMove(int[] inputValues) {
-		double[] output = forward(inputValues);
+        double[] output = forward(inputValues);
 		if(output[0] > output[1]) 
 			return 1;
 		return 2;
@@ -124,11 +125,17 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     }
 
     public double getFitness() {
+        return fitness;
+    }
+
+    public void calculateFitness() {
     	BreakoutBoard bb = new BreakoutBoard(this, false, seed);
     	bb.runSimulation();
-    	return bb.getFitness() != 0 ? bb.getFitness() : 0;
+    	this.fitness = bb.getFitness();
     }
-    
+
+
+
     public double[] getNeuralNetwork() {
         int size = (inputDim * hiddenDim) + hiddenDim + // Weights and biases for the hidden layer
                    (hiddenDim * outputDim) + outputDim; // Weights and biases for the output layer

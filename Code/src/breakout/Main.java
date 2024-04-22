@@ -1,12 +1,10 @@
 package breakout;
 
-import utils.Commons;
-
 public class Main {
 
 	public static void main(String[] args) {
 
-		GeneticAlgorithm ga = new GeneticAlgorithm();
+		BreakoutGeneticAlgorithm ga = new BreakoutGeneticAlgorithm();
 		BreakoutNeuralNetwork nn = ga.getChampion();
 		new Breakout(nn, nn.getSeed());
 

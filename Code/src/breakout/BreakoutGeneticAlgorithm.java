@@ -4,15 +4,14 @@ import java.util.Arrays;
 
 import utils.Commons;
 
-public class GeneticAlgorithm {
+public class BreakoutGeneticAlgorithm {
 
-		private int seed = 1;
+		private int seed = 141;
 		private static final int POPULATION_SIZE = 100;
-		private static final int NUM_GENERATIONS = 100;
-
-		private double MUTATION_RATE = .5;
+		private static final int NUM_GENERATIONS = 500;
+		private double MUTATION_PERCENTAGE = 0.7;
+		private double MUTATION_RATE = .6;
 		private double SELECTION_PERCENTAGE = .15;
-
 		private int K_TOURNAMENT = 5;
 
 
@@ -21,7 +20,7 @@ public class GeneticAlgorithm {
 		private BreakoutNeuralNetwork champion;
 		
 
-	    GeneticAlgorithm(){
+	    BreakoutGeneticAlgorithm(){
 	        generatePopulation();
 	        champion = search();
 	        System.out.println(champion);
@@ -46,19 +45,26 @@ public class GeneticAlgorithm {
 			}
 		}
 
+		private void loadPopulationFitness() {
+			for(BreakoutNeuralNetwork nn : population) nn.calculateFitness();
+		}
+
 
 	    private BreakoutNeuralNetwork search() {
+
 	    	champion = population[0];
+			int start = Math.max(2, (int) (POPULATION_SIZE * SELECTION_PERCENTAGE));
+
             for (int i = 0; i < NUM_GENERATIONS; i++) {
 				BreakoutNeuralNetwork[] newGeneration = new BreakoutNeuralNetwork[POPULATION_SIZE];
+				loadPopulationFitness();
 				Arrays.sort(population);
+
 				
 				if(i % 10 == 0)
 					System.out.println("Gen: " + i);
 		
 				getBest(population[0]);
-
-				int start = Math.max(2, (int) (POPULATION_SIZE * SELECTION_PERCENTAGE));
 
 				for (int j = 0; j < POPULATION_SIZE - 1; j += 2) {
 					
@@ -84,6 +90,7 @@ public class GeneticAlgorithm {
 				population = newGeneration;
 
 			}
+			champion.calculateFitness();
 			return champion;
 		}
 	    
@@ -91,8 +98,12 @@ public class GeneticAlgorithm {
 	    private BreakoutNeuralNetwork mutate(BreakoutNeuralNetwork individual) {
 	        double[] genes = individual.getNeuralNetwork();
 	        if (Math.random() < MUTATION_RATE) {
-				int index = (int) (Math.random() * Commons.BREAKOUT_NETWORK_SIZE);
-				genes[index] = ((Math.random() * 2) - 1);
+				int size = (int) (Commons.BREAKOUT_NETWORK_SIZE * MUTATION_PERCENTAGE);
+				int index = Math.max((int) (Math.random() * Commons.BREAKOUT_NETWORK_SIZE)-size, 0);
+				for(int i = 0; i < size; i++) {
+					genes[index + i] = ((Math.random() * 2) - 1);
+				}
+
 	        }
 	        individual.initializeNetwork(genes);
 	        return individual;
