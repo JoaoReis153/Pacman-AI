@@ -1,8 +1,8 @@
 package pacman;
 
-import utils.Commons;
-
 import java.util.Arrays;
+
+import utils.Commons;
 
 public class PacmanGeneticAlgorithm {
 
@@ -10,10 +10,9 @@ public class PacmanGeneticAlgorithm {
     private final int NUM_GENERATIONS = 100;
     private double MUTATION_CHANCE = .8;
     private double MUTATION_PERCENTAGE = .8;
-    private double CUTOFF = .2;
-    private double SELECTION_PARENTS_PERCENTAGE = .2;
+    private double SELECTION_PERCENTAGE = .2;
     private int k_tournament = 5;
-
+    private PacmanNeuralNetwork champion;
     private int seed ;
 
     private PacmanNeuralNetwork[] population = new PacmanNeuralNetwork[POPULATION_SIZE];
@@ -22,56 +21,69 @@ public class PacmanGeneticAlgorithm {
 
     public PacmanGeneticAlgorithm(int seed) {
         this.seed = seed;
-        generatePopulation();
+        this.champion = search();
     }
 
-    private void generatePopulationFitness(PacmanNeuralNetwork[] gen) {
-        for(PacmanNeuralNetwork nn : gen) nn.calculateFitness();
+
+    public PacmanNeuralNetwork getChampion() {
+        return champion;
     }
+
+
+    private void getBest(PacmanNeuralNetwork nn) {
+        if(champion == null || nn.getFitness() > champion.getFitness()) {
+            champion = nn;
+            System.out.println(champion.getFitness());
+        }
+    }
+
+
     // Função para gerar o fitness da população para não violar as diretrizes do compareTo() no próximo passo (sort)
-    public PacmanNeuralNetwork search() {
+    private PacmanNeuralNetwork search() {
 
+        generatePopulation();
+
+        int start = Math.max(2, (int) (POPULATION_SIZE * SELECTION_PERCENTAGE));
 
         for (int i = 0; i < NUM_GENERATIONS; i++) {
-            System.out.print("Gen: " + i + " - ");
-            generatePopulationFitness(population);
-            Arrays.sort(population);
 
-            System.out.println(population[POPULATION_SIZE-1].getFitness());
+            loadPopulationFitness();
+
+            Arrays.sort(population);
 
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 
-            for (int j = 0; j < POPULATION_SIZE; j += 2) {
+            if(i % 10 == 0)
+                System.out.println("Gen: " + i);
 
-                PacmanNeuralNetwork parent1 = selectParent();
-                PacmanNeuralNetwork parent2 = selectParent();
-                PacmanNeuralNetwork[] children = crossover(parent1, parent2);
+            getBest(population[0]);
 
-                newGeneration[j] = mutate(children[0]);
-                newGeneration[j + 1] = mutate(children[1]);
+            for (int j = 0; j < POPULATION_SIZE - 1; j += 2) {
+
+                if(j < start) {
+                    newGeneration[j] = population[j];
+                    newGeneration[j+1] = population[j+1];
+                } else {
+                    //Select Parents
+                    PacmanNeuralNetwork parent1 = selectParent();
+                    PacmanNeuralNetwork parent2 = selectParent();
+                    PacmanNeuralNetwork[] children;
+
+                    //Crossover
+                    children = crossover(parent1, parent2);
+
+                    //Mutation
+                    newGeneration[j] = mutate(children[0]);
+                    newGeneration[j + 1]  = mutate(children[1]);
+                }
 
             }
 
-            if( i != NUM_GENERATIONS - 1)
-                createNewPopulation(newGeneration);
+            population = newGeneration;
+
         }
-        System.out.println("-------");
-
-        return population[POPULATION_SIZE - 1];
-    }
-
-    private void createNewPopulation(PacmanNeuralNetwork[] newgeneration) {
-
-        generatePopulationFitness(newgeneration);
-        Arrays.sort(newgeneration);
-        int cutoff = (int) (POPULATION_SIZE * CUTOFF);
-
-        int bestIndividuals = POPULATION_SIZE - cutoff;
-
-        for (int i = 0; i != cutoff; i++) {
-            population[i] = newgeneration[i + bestIndividuals];
-        }
-
+        champion.calculateFitness(seed);
+        return champion;
     }
 
     private PacmanNeuralNetwork mutate(PacmanNeuralNetwork individual) {
@@ -82,7 +94,7 @@ public class PacmanGeneticAlgorithm {
                 genes[index] = (Math.random() * 2 - 1);
             }
         }
-        individual.initializeParameters(genes);
+        individual.initializeNetwork(genes);
         return individual;
     }
 
@@ -100,8 +112,8 @@ public class PacmanGeneticAlgorithm {
             child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
         }
 
-        PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1, seed);
-        PacmanNeuralNetwork offspring2 = new PacmanNeuralNetwork(child2, seed);
+        PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1);
+        PacmanNeuralNetwork offspring2 = new PacmanNeuralNetwork(child2);
         return new PacmanNeuralNetwork[]{offspring1, offspring2};
 
     }
@@ -109,23 +121,27 @@ public class PacmanGeneticAlgorithm {
 
     // Realiza seleção por torneio
     private PacmanNeuralNetwork selectParent() {
+        PacmanNeuralNetwork best = population[(int) (Math.random() * POPULATION_SIZE)];
 
-        PacmanNeuralNetwork[] possibleParents = new PacmanNeuralNetwork[k_tournament];
+        for (int i = 1; i < k_tournament; i++) {
+            PacmanNeuralNetwork c = population[(int) (Math.random() * POPULATION_SIZE)];
 
-        for (int i = 0; i != k_tournament; i++) {
-            possibleParents[i] = population[(int) (POPULATION_SIZE - (Math.random() * POPULATION_SIZE * SELECTION_PARENTS_PERCENTAGE))];
+            if (c.getFitness() > best.getFitness())
+                best = c;
+
         }
+        return best;
+    }
 
-        Arrays.sort(possibleParents);
-
-        return possibleParents[k_tournament - 1];
-
+    // load random population
+    private void loadPopulationFitness() {
+        for(PacmanNeuralNetwork nn : population) nn.calculateFitness(seed);
     }
 
     // generate random population
     private void generatePopulation() {
         for (int i = 0; i < population.length; i++) {
-            population[i] = new PacmanNeuralNetwork(seed);
+            population[i] = new PacmanNeuralNetwork();
         }
     }
 

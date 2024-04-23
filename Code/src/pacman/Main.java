@@ -7,8 +7,8 @@ public class Main {
 
         int seed = 10;
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(seed);
-        PacmanNeuralNetwork nn = ga.search();
-        new Pacman(nn, true, nn.getSeed());
+        PacmanNeuralNetwork nn = ga.getChampion();
+        new Pacman(nn, true, seed);
 
     }
 }
