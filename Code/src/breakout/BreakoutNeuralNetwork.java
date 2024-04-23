@@ -14,16 +14,12 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     private double[] outputBiases;
 
     private double fitness = 0.0;
-
-    private int seed = Commons.SEED;
     
-    public BreakoutNeuralNetwork(int seed) {
-    	this.seed = seed;
+    public BreakoutNeuralNetwork() {
         initializeParameters();
     }
     
     public BreakoutNeuralNetwork(double[] values, int seed) {
-    	this.seed = seed;
         int maxSize = Commons.BREAKOUT_NETWORK_SIZE; // Adjust this value as per new network size
         if (values.length == maxSize) {
             initializeNetwork(values);
@@ -37,8 +33,9 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
 	    hiddenBiases = new double[hiddenDim];
 	    outputWeights = new double[hiddenDim][outputDim];
 	    outputBiases = new double[outputDim];
-	    
+
 	    int index = 0;
+
 	    for (int i = 0; i < inputDim; i++) {
 	        for (int j = 0; j < hiddenDim; j++) {
 	            hiddenWeights[i][j] = values[index++];
@@ -54,7 +51,7 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
 	    }
 	    for (int i = 0; i < outputDim; i++) {
 	        outputBiases[i] = values[index++];
-	    }  	
+	    }
 	}
 
     private void initializeParameters() {
@@ -81,11 +78,6 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
         }
     }
 
-	public int getSeed() {
-		return seed;
-	}
-
-
 	public double[] forward(int[] inputValues) {
 		//double[] inputValues = normalize(inputValues);
 
@@ -95,7 +87,7 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
 			for (int j = 0; j < inputDim; j++) {
 				hiddenLayer[i] += hiddenWeights[j][i] * inputValues[j];
 			}
-			hiddenLayer[i] = sigmoid(hiddenLayer[i] + hiddenBiases[i]);
+			hiddenLayer[i] = hiddenLayer[i] + hiddenBiases[i];
 		}
 
 		// Output layer (now directly follows the first hidden layer)
@@ -128,7 +120,7 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
         return fitness;
     }
 
-    public void calculateFitness() {
+    public void calculateFitness(int seed) {
     	BreakoutBoard bb = new BreakoutBoard(this, false, seed);
     	bb.runSimulation();
     	this.fitness = bb.getFitness();
@@ -137,9 +129,8 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
 
 
     public double[] getNeuralNetwork() {
-        int size = (inputDim * hiddenDim) + hiddenDim + // Weights and biases for the hidden layer
-                   (hiddenDim * outputDim) + outputDim; // Weights and biases for the output layer
-        double[] networkParams = new double[size];
+
+        double[] networkParams = new double[Commons.BREAKOUT_NETWORK_SIZE];
 
         int index = 0;
         // Hidden layer weights
