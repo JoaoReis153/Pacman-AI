@@ -1,18 +1,20 @@
 package pacman;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import breakout.BreakoutNeuralNetwork;
 import utils.Commons;
 
 public class PacmanGeneticAlgorithm {
 
+    private final Random random = new Random((int) (Math.random() * 10000));
     private final int POPULATION_SIZE = 100;
-    private final int NUM_GENERATIONS = 400;
+    private final int NUM_GENERATIONS = 100;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
     private double MUTATION_PERCENTAGE = 0.0;
     //private double MUTATION_PERCENTAGE = .8;
-    private static final double MUTATION_RATE = 0.2;
+    private static final double MUTATION_RATE = 0.1;
     private double SELECTION_PERCENTAGE = .2;
     private int k_tournament = 5;
     private PacmanNeuralNetwork champion;
@@ -101,8 +103,8 @@ public class PacmanGeneticAlgorithm {
         double[] genes = individual.getNeuralNetwork();
         if (Math.random() < MUTATION_RATE) {
             for (int i = 0; i < MUTATION_PERCENTAGE * Commons.PACMAN_NETWORK_SIZE; i++) {
-                int index = (int) (Math.random() * Commons.PACMAN_NETWORK_SIZE);
-                genes[index] = (Math.random() * 2 - 1);
+                int index = (int) (random.nextDouble() * Commons.PACMAN_NETWORK_SIZE);
+                genes[index] = (random.nextDouble() * 2 - 1);
             }
         }
         individual.initializeNetwork(genes);
@@ -116,7 +118,7 @@ public class PacmanGeneticAlgorithm {
         double[] child1 = new double[genes1.length];
         double[] child2 = new double[genes2.length];
 
-        int crossoverPoint = (int) (Math.random() * genes1.length);
+        int crossoverPoint = (int) (random.nextDouble() * genes1.length);
 
         for (int i = 0; i < genes1.length; i++) {
             child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
@@ -132,10 +134,10 @@ public class PacmanGeneticAlgorithm {
 
     // Realiza seleção por torneio
     private PacmanNeuralNetwork selectParent() {
-        PacmanNeuralNetwork best = population[(int) (Math.random() * POPULATION_SIZE)];
+        PacmanNeuralNetwork best = population[(int) (random.nextDouble() * POPULATION_SIZE)];
 
         for (int i = 1; i < k_tournament; i++) {
-            PacmanNeuralNetwork c = population[(int) (Math.random() * POPULATION_SIZE)];
+            PacmanNeuralNetwork c = population[(int) (random.nextDouble() * POPULATION_SIZE)];
 
             if (c.getFitness() > best.getFitness())
                 best = c;

@@ -12,7 +12,7 @@ public class BreakoutGeneticAlgorithm {
 		private int seed;
 
 		private static final int POPULATION_SIZE = 100;
-		private static final int NUM_GENERATIONS = 400;
+		private static final int NUM_GENERATIONS = 100;
 		private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
 		private double MUTATION_PERCENTAGE = 0.0;
 		private static final double MUTATION_RATE = 0.2;
