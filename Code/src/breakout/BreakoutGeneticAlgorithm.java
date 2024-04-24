@@ -9,15 +9,15 @@ public class BreakoutGeneticAlgorithm {
 
 		private Random random = new Random((int) (Math.random() * 100000));
 
-		private int seed = 0;
+		private int seed;
 
 		private static final int POPULATION_SIZE = 100;
 		private static final int NUM_GENERATIONS = 500;
-		private static final double INITIAL_MUTATION_PERCENTAGE = 0.02;
+		private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
 		private double MUTATION_PERCENTAGE = 0.0;
 		private static final double MUTATION_RATE = 0.1;
-		private static final double SELECTION_PERCENTAGE = 0.2;
-		private static final int K_TOURNAMENT = 8;
+		private static final double SELECTION_PERCENTAGE = 0.4;
+		private static final int K_TOURNAMENT = 6;
 
 		private static int noEvolutionInterval = 0;
 
@@ -27,7 +27,8 @@ public class BreakoutGeneticAlgorithm {
 
 		public int getSeed() {return seed;}
 
-	    BreakoutGeneticAlgorithm(){
+	    BreakoutGeneticAlgorithm(int seed){
+			this.seed = seed;
 			System.out.println("--Seed : " + seed + " --");
 	        generatePopulation();
 	        champion = search();
@@ -126,7 +127,9 @@ public class BreakoutGeneticAlgorithm {
 	    }
 
 
-		private BreakoutNeuralNetwork selectParent() {
+
+
+	private BreakoutNeuralNetwork selectParent() {
 			BreakoutNeuralNetwork best = population[(int) (random.nextDouble() * POPULATION_SIZE)];
 
 			for (int i = 1; i < K_TOURNAMENT; i++) {
@@ -165,8 +168,8 @@ public class BreakoutGeneticAlgorithm {
 
 			}
 
-			BreakoutNeuralNetwork offspring1 = new BreakoutNeuralNetwork(child1, seed);
-			BreakoutNeuralNetwork offspring2 = new BreakoutNeuralNetwork(child2, seed);
+			BreakoutNeuralNetwork offspring1 = new BreakoutNeuralNetwork(child1);
+			BreakoutNeuralNetwork offspring2 = new BreakoutNeuralNetwork(child2);
 			return new BreakoutNeuralNetwork[]{offspring1, offspring2};
 		}
 

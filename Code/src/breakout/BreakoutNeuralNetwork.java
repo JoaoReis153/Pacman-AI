@@ -18,8 +18,9 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     public BreakoutNeuralNetwork() {
         initializeParameters();
     }
-    
-    public BreakoutNeuralNetwork(double[] values, int seed) {
+
+
+    public BreakoutNeuralNetwork(double[] values) {
         int maxSize = Commons.BREAKOUT_NETWORK_SIZE; // Adjust this value as per new network size
         if (values.length == maxSize) {
             initializeNetwork(values);
