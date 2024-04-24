@@ -12,10 +12,10 @@ public class BreakoutGeneticAlgorithm {
 		private int seed;
 
 		private static final int POPULATION_SIZE = 100;
-		private static final int NUM_GENERATIONS = 500;
+		private static final int NUM_GENERATIONS = 400;
 		private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
 		private double MUTATION_PERCENTAGE = 0.0;
-		private static final double MUTATION_RATE = 0.1;
+		private static final double MUTATION_RATE = 0.2;
 		private static final double SELECTION_PERCENTAGE = 0.4;
 		private static final int K_TOURNAMENT = 6;
 
@@ -71,7 +71,7 @@ public class BreakoutGeneticAlgorithm {
 
 				loadPopulationFitness();
 
-				MUTATION_PERCENTAGE = Math.min(0.2 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
+				MUTATION_PERCENTAGE = Math.min(0.1 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
 				if(MUTATION_PERCENTAGE == 0.68) System.out.println("Mutation percentage at it's maximum");
 
 				Arrays.sort(population);
