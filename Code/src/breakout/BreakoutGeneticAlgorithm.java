@@ -19,7 +19,7 @@ public class BreakoutGeneticAlgorithm {
 		private static final double SELECTION_PERCENTAGE = 0.4;
 		private static final int K_TOURNAMENT = 6;
 
-		private static int noEvolutionInterval = 0;
+		private int noEvolutionInterval = 0;
 
 		private BreakoutNeuralNetwork[] population = new BreakoutNeuralNetwork[POPULATION_SIZE];
 

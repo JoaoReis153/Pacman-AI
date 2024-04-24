@@ -2,18 +2,23 @@ package pacman;
 
 import java.util.Arrays;
 
+import breakout.BreakoutNeuralNetwork;
 import utils.Commons;
 
 public class PacmanGeneticAlgorithm {
 
     private final int POPULATION_SIZE = 100;
-    private final int NUM_GENERATIONS = 100;
-    private double MUTATION_CHANCE = .8;
-    private double MUTATION_PERCENTAGE = .8;
+    private final int NUM_GENERATIONS = 400;
+    private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
+    private double MUTATION_PERCENTAGE = 0.0;
+    //private double MUTATION_PERCENTAGE = .8;
+    private static final double MUTATION_RATE = 0.2;
     private double SELECTION_PERCENTAGE = .2;
     private int k_tournament = 5;
     private PacmanNeuralNetwork champion;
     private int seed ;
+
+    private int noEvolutionInterval = 0;
 
     private PacmanNeuralNetwork[] population = new PacmanNeuralNetwork[POPULATION_SIZE];
 
@@ -30,13 +35,15 @@ public class PacmanGeneticAlgorithm {
     }
 
 
-    private void getBest(PacmanNeuralNetwork nn) {
-        if(champion == null || nn.getFitness() > champion.getFitness()) {
+    private void updateChamp(PacmanNeuralNetwork nn) {
+        if (champion == null || nn.getFitness() > champion.getFitness()) {
+            noEvolutionInterval = 0;
             champion = nn;
-            System.out.println(champion.getFitness());
+            System.out.println(champion);
+        } else {
+            noEvolutionInterval++;
         }
     }
-
 
     // Função para gerar o fitness da população para não violar as diretrizes do compareTo() no próximo passo (sort)
     private PacmanNeuralNetwork search() {
@@ -51,12 +58,16 @@ public class PacmanGeneticAlgorithm {
 
             Arrays.sort(population);
 
+            MUTATION_PERCENTAGE = Math.min(INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
+            if(MUTATION_PERCENTAGE == 0.68) System.out.println("Mutation percentage at it's maximum");
+
+
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 
             if(i % 10 == 0)
                 System.out.println("Gen: " + i);
 
-            getBest(population[0]);
+            updateChamp(population[0]);
 
             for (int j = 0; j < POPULATION_SIZE - 1; j += 2) {
 
@@ -88,7 +99,7 @@ public class PacmanGeneticAlgorithm {
 
     private PacmanNeuralNetwork mutate(PacmanNeuralNetwork individual) {
         double[] genes = individual.getNeuralNetwork();
-        if (Math.random() < MUTATION_CHANCE) {
+        if (Math.random() < MUTATION_RATE) {
             for (int i = 0; i < MUTATION_PERCENTAGE * Commons.PACMAN_NETWORK_SIZE; i++) {
                 int index = (int) (Math.random() * Commons.PACMAN_NETWORK_SIZE);
                 genes[index] = (Math.random() * 2 - 1);
