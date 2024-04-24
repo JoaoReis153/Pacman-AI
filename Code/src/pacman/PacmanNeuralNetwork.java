@@ -104,12 +104,19 @@ public class PacmanNeuralNetwork implements GameController, Comparable<PacmanNeu
 
 
     @Override
-    public int nextMove(int[] inputValues) {
-        double[] output = forward(inputValues);
-        if(output[0] > output[1])
-            return 1;
-        return 2;
+    public int nextMove(int[] currentState) {
+        double maxValue = 0;
+        int max = 0;
+        double[] output = forward(currentState);
+        for(int i = 0; i  < output.length; i++) {
+            if( output[i] > maxValue) {
+                max = i+1;
+                maxValue = output[i];
+            };
+        }
+        return maxValue == 0.25 ? 0 : max;
     }
+
 
     private double sigmoid(double x) {
         return 1/(1+Math.exp(-x));
