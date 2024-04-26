@@ -3,6 +3,7 @@ package breakout;
 import java.util.Arrays;
 import java.util.Random;
 
+import pacman.PacmanNeuralNetwork;
 import utils.Commons;
 
 public class BreakoutGeneticAlgorithm {
@@ -11,13 +12,14 @@ public class BreakoutGeneticAlgorithm {
 
 		private int seed;
 
-		private static final int POPULATION_SIZE = 1000;
+		private static final int POPULATION_SIZE = 100;
 		private static final int NUM_GENERATIONS = 100;
 		private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
 		private double MUTATION_PERCENTAGE = 0.0;
 		private static final double MUTATION_RATE = 0.2;
 		private static final double SELECTION_PERCENTAGE = 0.4;
 		private static final int K_TOURNAMENT = 6;
+		private static final int K_POINTS = 4;
 
 		private int noEvolutionInterval = 0;
 
@@ -71,7 +73,7 @@ public class BreakoutGeneticAlgorithm {
 
 				loadPopulationFitness();
 
-				MUTATION_PERCENTAGE = Math.min(0.1 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
+				MUTATION_PERCENTAGE = Math.min(INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
 				if(MUTATION_PERCENTAGE == 0.68) System.out.println("Mutation percentage at it's maximum");
 
 				Arrays.sort(population);
@@ -84,7 +86,7 @@ public class BreakoutGeneticAlgorithm {
 
 				updateChamp(population[0]);
 
-				for (int j = 0; j < POPULATION_SIZE - 1; j += 2) {
+				for (int j = 0; j < POPULATION_SIZE; j += 2) {
 
 					if(j < eliteCount) {
 						newGeneration[j] = population[j];
@@ -118,7 +120,7 @@ public class BreakoutGeneticAlgorithm {
 				int size = (int) (Commons.BREAKOUT_NETWORK_SIZE * MUTATION_PERCENTAGE);
 				for(int i = 0; i < size; i++) {
 					int index = (int) (random.nextDouble() * Commons.BREAKOUT_NETWORK_SIZE);
-					genes[index] = ((random.nextDouble() * 2) - 1);
+					genes[index] = (random.nextDouble() * 2) - 1;
 				}
 
 	        }
@@ -141,7 +143,7 @@ public class BreakoutGeneticAlgorithm {
 			}
 			return best;
 		}
-
+/*
 		private BreakoutNeuralNetwork[] crossover(BreakoutNeuralNetwork parent1, BreakoutNeuralNetwork parent2) {
 		   	double[] genes1 = parent1.getNeuralNetwork();
 			double[] genes2 = parent2.getNeuralNetwork();
@@ -151,7 +153,7 @@ public class BreakoutGeneticAlgorithm {
 			int crossoverPoint = (int) (random.nextDouble() * genes1.length);
 
 			for (int i = 0; i < genes1.length; i++) {
-				/*
+
 				if(i%2== 0) {
 					child1[i] = genes2[i];
 					child2[i] = genes1[i];
@@ -159,7 +161,7 @@ public class BreakoutGeneticAlgorithm {
 					child1[i] = genes1[i];
 					child2[i] = genes2[i];
 				}
-				*/
+
 
 
 		    	child1[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
@@ -172,7 +174,41 @@ public class BreakoutGeneticAlgorithm {
 			BreakoutNeuralNetwork offspring2 = new BreakoutNeuralNetwork(child2);
 			return new BreakoutNeuralNetwork[]{offspring1, offspring2};
 		}
+*/   private BreakoutNeuralNetwork[] crossover(BreakoutNeuralNetwork parent1, BreakoutNeuralNetwork parent2) {
+		double[] genes1 = parent1.getNeuralNetwork();
+		double[] genes2 = parent2.getNeuralNetwork();
+		double[] child1 = new double[genes1.length];
+		double[] child2 = new double[genes2.length];
 
+		int[] crossoverPoints = new int[K_POINTS];
+		for (int i = 0; i < K_POINTS; i++) {
+			crossoverPoints[i] = (int) (random.nextDouble() * genes1.length);
+		}
+		Arrays.sort(crossoverPoints);
+
+		for (int i = 0; i < genes1.length; i++) {
+			if (isInsideCrossoverPoints(i, crossoverPoints)) {
+				child1[i] = genes2[i];
+				child2[i] = genes1[i];
+			} else {
+				child1[i] = genes1[i];
+				child2[i] = genes2[i];
+			}
+		}
+
+		BreakoutNeuralNetwork offspring1 = new BreakoutNeuralNetwork(child1);
+		BreakoutNeuralNetwork offspring2 = new BreakoutNeuralNetwork(child2);
+		return new BreakoutNeuralNetwork[]{offspring1, offspring2};
+	}
+
+		private boolean isInsideCrossoverPoints(int index, int[] crossoverPoints) {
+			for (int i = 0; i < crossoverPoints.length - 1; i++) {
+				if (index >= crossoverPoints[i] && index <= crossoverPoints[i + 1]) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 
 
