@@ -9,12 +9,12 @@ import utils.Commons;
 public class PacmanGeneticAlgorithm {
 
     private final Random random = new Random((int) (Math.random() * 10000));
-    private final int POPULATION_SIZE = 500;
+    private final int POPULATION_SIZE = 100;
     private final int NUM_GENERATIONS = 100;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
     private double MUTATION_PERCENTAGE = 0.0;
-    private static final double MUTATION_RATE = 0.1;
-    private double SELECTION_PERCENTAGE = .2;
+    private static final double MUTATION_RATE = 0.40;
+    private double SELECTION_PERCENTAGE = .5;
     private int k_tournament = 5;
     private PacmanNeuralNetwork champion;
     private final int seed ;
@@ -58,16 +58,16 @@ public class PacmanGeneticAlgorithm {
 
             Arrays.sort(population);
 
-            MUTATION_PERCENTAGE = 0.05;
-            if(noEvolutionInterval > 100)
-                MUTATION_PERCENTAGE = 0.7;
+            MUTATION_PERCENTAGE = Math.min(0.1 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
+            if(MUTATION_PERCENTAGE == 0.68) System.out.println("Mutation percentage at it's maximum");
+
 
 
 
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 
-            if(i % 10 == 0)
-                System.out.println("Gen: " + i);
+            //if(i % 10 == 0)
+            System.out.println("Gen: " + i);
 
             updateChamp(population[0]);
 
