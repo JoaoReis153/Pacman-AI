@@ -6,10 +6,15 @@ public class Main {
 
 	public static void main(String[] args) {
 
+		int seed = 265;
+
+		BreakoutGeneticAlgorithm ga = new BreakoutGeneticAlgorithm(seed);
+		BreakoutNeuralNetwork nn = ga.getChampion();
+		/*
+
 		int n = 1000;
 		ArrayList<Score> scoreList = new ArrayList<>();
 
-		int seed = 296;
 		for(int i = 0; i < n; i++) {
 
 			BreakoutGeneticAlgorithm ga = new BreakoutGeneticAlgorithm(i);
@@ -22,9 +27,11 @@ public class Main {
 
 		}
 
-		for(int i = 0; i < scoreList.size(); i++) {
+		for(int i = scoreList.size(); i > 0; i--) {
 			System.out.println(scoreList.get(i));
 		}
+		s
+		 */
 
 
 
