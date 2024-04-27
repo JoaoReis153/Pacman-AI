@@ -52,11 +52,11 @@ public class PacmanNeuralNetwork extends NeuralNetwork {
         double[] output = forward(currentState);
         for(int i = 0; i  < output.length; i++) {
             if( output[i] > maxValue) {
-                max = i+1;
+                max = i;
                 maxValue = output[i];
             };
         }
-        return maxValue == 0.25 ? 0 : max;
+        return max;
     }
 
     public void calculateFitness(int seed) {
