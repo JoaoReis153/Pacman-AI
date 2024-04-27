@@ -10,6 +10,7 @@ public class Main {
 
 		BreakoutGeneticAlgorithm ga = new BreakoutGeneticAlgorithm(seed);
 		BreakoutNeuralNetwork nn = ga.getChampion();
+		new Breakout(nn, seed);
 		/*
 
 		int n = 1000;

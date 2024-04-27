@@ -9,14 +9,13 @@ import utils.Commons;
 public class PacmanGeneticAlgorithm {
 
     private final Random random = new Random((int) (Math.random() * 10000));
-    private final int POPULATION_SIZE = 1000;
-    private final int NUM_GENERATIONS = 10;
+    private final int POPULATION_SIZE = 100;
+    private final int NUM_GENERATIONS = 100;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
     private double MUTATION_PERCENTAGE = 0.05;
     private static final double MUTATION_RATE = 0.1;
     private double SELECTION_PERCENTAGE = .3;
     private int k_tournament = 4;
-    private int k_points = 4;
     private PacmanNeuralNetwork champion;
     private final int seed ;
 
@@ -106,7 +105,7 @@ public class PacmanGeneticAlgorithm {
         return individual;
     }
 
-/*
+
     private PacmanNeuralNetwork[] crossover(PacmanNeuralNetwork parent1, PacmanNeuralNetwork parent2) {
         double[] genes1 = parent1.getNeuralNetwork();
         double[] genes2 = parent2.getNeuralNetwork();
@@ -125,42 +124,7 @@ public class PacmanGeneticAlgorithm {
         return new PacmanNeuralNetwork[]{offspring1, offspring2};
 
     }
-*/
-    private PacmanNeuralNetwork[] crossover(PacmanNeuralNetwork parent1, PacmanNeuralNetwork parent2) {
-        double[] genes1 = parent1.getNeuralNetwork();
-        double[] genes2 = parent2.getNeuralNetwork();
-        double[] child1 = new double[genes1.length];
-        double[] child2 = new double[genes2.length];
 
-        int[] crossoverPoints = new int[k_points];
-        for (int i = 0; i < k_points; i++) {
-            crossoverPoints[i] = (int) (random.nextDouble() * genes1.length);
-        }
-        Arrays.sort(crossoverPoints);
-
-        for (int i = 0; i < genes1.length; i++) {
-            if (isInsideCrossoverPoints(i, crossoverPoints)) {
-                child1[i] = genes2[i];
-                child2[i] = genes1[i];
-            } else {
-                child1[i] = genes1[i];
-                child2[i] = genes2[i];
-            }
-        }
-
-        PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1);
-        PacmanNeuralNetwork offspring2 = new PacmanNeuralNetwork(child2);
-        return new PacmanNeuralNetwork[]{offspring1, offspring2};
-    }
-
-    private boolean isInsideCrossoverPoints(int index, int[] crossoverPoints) {
-        for (int i = 0; i < crossoverPoints.length - 1; i++) {
-            if (index >= crossoverPoints[i] && index <= crossoverPoints[i + 1]) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     // Realiza seleção por torneio
     private PacmanNeuralNetwork selectParent() {
