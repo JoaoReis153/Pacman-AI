@@ -1,4 +1,4 @@
-package breakout;
+package general;
 
 public class Score implements Comparable<Score> {
 	private final double fitness;

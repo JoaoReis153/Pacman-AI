@@ -9,8 +9,8 @@ import utils.Commons;
 public class PacmanGeneticAlgorithm {
 
     private final Random random = new Random((int) (Math.random() * 10000));
-    private final int POPULATION_SIZE = 100;
-    private final int NUM_GENERATIONS = 100;
+    private final int POPULATION_SIZE = 1000;
+    private final int NUM_GENERATIONS = 10;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
     private double MUTATION_PERCENTAGE = 0.05;
     private static final double MUTATION_RATE = 0.1;
