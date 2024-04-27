@@ -56,9 +56,9 @@ public class BreakoutNeuralNetwork extends NeuralNetwork {
 	}
 
     public void calculateFitness(int seed) {
-    	BreakoutBoard bb = new BreakoutBoard(this, false, seed);
-    	bb.runSimulation();
-    	this.setFitness(bb.getFitness());
+		BreakoutBoard bb = new BreakoutBoard(this, false, seed*2);
+		bb.runSimulation();
+		this.setFitness(bb.getFitness());
     }
 
     @Override
