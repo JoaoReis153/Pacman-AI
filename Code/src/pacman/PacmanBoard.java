@@ -28,10 +28,6 @@ public class PacmanBoard extends JPanel implements ActionListener {
 	 * 
 	 */
 
-	private int time;
-	private int timeAlive;
-	private int timeLimit = 50;
-
 	private static final long serialVersionUID = 1L;
 
 	private Random r = new Random();
@@ -205,8 +201,8 @@ public class PacmanBoard extends JPanel implements ActionListener {
 	}
 
 	private void playGame() {
-		time++;
-		if (dying || time > timeLimit) {
+
+		if (dying) {
 
 			death();
 
@@ -219,9 +215,8 @@ public class PacmanBoard extends JPanel implements ActionListener {
 	}
 
 	private void playGame(Graphics2D g2d) {
-		time++;
-		System.out.println(time);
-		if (dying || time > timeLimit) {
+
+		if (dying) {
 
 			death();
 
@@ -413,8 +408,6 @@ public class PacmanBoard extends JPanel implements ActionListener {
 				screenData[pos] = (short) (ch & 15);
 				state[pos] = 0;
 				score++;
-				timeAlive += time;
-				time = 0;
 			}
 
 			if (req_dx != 0 || req_dy != 0) {
@@ -682,7 +675,7 @@ public class PacmanBoard extends JPanel implements ActionListener {
 	}
 
 	public int getScore() {
-		return score * 1000 + timeAlive * 3;
+		return score * 1000;
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class Main {
         System.out.println("Best fitness: " + nn.getFitness());
         new Pacman(nn, true, seed);
        */
-        int n = 11539814;
+        int n = 1993319814;
         ArrayList<Score> scoreList = new ArrayList<>();
         for(int i = n; i < n + 200; i++) {
             System.out.println();
