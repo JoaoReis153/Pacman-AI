@@ -93,7 +93,7 @@ public class PacmanNeuralNetwork implements GameController, Comparable<PacmanNeu
         double[] output = new double[outputDim];
         for (int i = 0; i < outputDim; i++) {
             for (int j = 0; j < hiddenDim; j++) {
-                output[i] += outputWeights[j][i] * hiddenLayer[j];
+                output[i] += sigmoid(outputWeights[j][i] * hiddenLayer[j]);
             }
             output[i] = sigmoid(output[i] + outputBiases[i]);
         }
