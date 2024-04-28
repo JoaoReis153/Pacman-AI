@@ -10,7 +10,7 @@ public class PacmanGeneticAlgorithm {
 
     private final Random random = new Random();
     private final int POPULATION_SIZE = 100;
-    private final int NUM_GENERATIONS = 100;
+    private final int NUM_GENERATIONS = 10;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
     private double MUTATION_PERCENTAGE = 0.1;
     private static final double MUTATION_RATE = 0.1;

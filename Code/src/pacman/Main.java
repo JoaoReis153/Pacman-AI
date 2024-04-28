@@ -22,7 +22,9 @@ public class Main {
         int n = 11539814;
         ArrayList<Score> scoreList = new ArrayList<>();
         for(int i = n; i < n + 200; i++) {
-
+            System.out.println();
+            System.out.println();
+            System.out.println("-----Seed: " + i + " --------");
             PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(i);
             PacmanNeuralNetwork nn = ga.getChampion();
             scoreList.add(new Score(i, nn.getFitness()));
@@ -30,6 +32,12 @@ public class Main {
             Collections.sort(scoreList);
             System.out.println("Best: ");
             System.out.println(scoreList.getFirst());
+            if(i - n > 10) {
+                System.out.println("Top 10: ");
+                for(int k = 0; k < scoreList.size(); k++) {
+                    System.out.println(scoreList.get(k+1));
+                }
+            }
 
         }
 
