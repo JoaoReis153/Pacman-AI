@@ -8,14 +8,14 @@ import utils.Commons;
 public class PacmanGeneticAlgorithm {
 
     private final Random random = new Random((int) (Math.random() * 10000));
-    private final int POPULATION_SIZE = 500;
-    private final int NUM_GENERATIONS = 1000;
+    private final int POPULATION_SIZE = 100;
+    private final int NUM_GENERATIONS = 100;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.02;
-    private double MUTATION_PERCENTAGE = 0.1;
+    private double MUTATION_PERCENTAGE = 0.05;
     //private double MUTATION_PERCENTAGE = .8;
     private static final double MUTATION_RATE = 0.1;
-    private double SELECTION_PERCENTAGE = .05;
-    private int k_tournament = 10;
+    private double SELECTION_PERCENTAGE = .2;
+    private int k_tournament = 3;
     private PacmanNeuralNetwork champion;
     private int seed ;
 
@@ -51,7 +51,7 @@ public class PacmanGeneticAlgorithm {
 
         generatePopulation();
 
-        int start = Math.max(2, (int) (POPULATION_SIZE * SELECTION_PERCENTAGE));
+        int start = (int) (POPULATION_SIZE * SELECTION_PERCENTAGE);
 
         for (int i = 0; i < NUM_GENERATIONS; i++) {
 
