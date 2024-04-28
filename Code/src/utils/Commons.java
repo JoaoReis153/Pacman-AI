@@ -15,16 +15,15 @@ public interface Commons {
 	public static final int PERIOD = 5;
     
 	public static final int BREAKOUT_STATE_SIZE = 7;
-	public static final int BREAKOUT_HIDDEN_LAYER = 6;
-	public static final int BREAKOUT_NUM_ACTIONS = 2;
+	public static final int BREAKOUT_HIDDEN_LAYER = 5;
+	public static final int BREAKOUT_NUM_ACTIONS = 3;
 
 	public static final int BREAKOUT_NETWORK_SIZE = (BREAKOUT_STATE_SIZE * BREAKOUT_HIDDEN_LAYER) + BREAKOUT_HIDDEN_LAYER +
 			(BREAKOUT_HIDDEN_LAYER * BREAKOUT_NUM_ACTIONS) + BREAKOUT_NUM_ACTIONS;
 
 	public static final int PACMAN_STATE_SIZE = PacmanBoard.N_BLOCKS * PacmanBoard.N_BLOCKS * 2 + 2 + PacmanBoard.MAX_GHOSTS * 2;
 	public static final int PACMAN_NUM_ACTIONS = 4;
-	public static final int PACMAN_HIDDEN_LAYER = 20;
+	public static final int PACMAN_HIDDEN_LAYER = 50;
 	public static final int PACMAN_NETWORK_SIZE = (PACMAN_STATE_SIZE * PACMAN_HIDDEN_LAYER) + PACMAN_HIDDEN_LAYER +
 			(PACMAN_HIDDEN_LAYER * PACMAN_NUM_ACTIONS) + PACMAN_NUM_ACTIONS;
-    public static final int SEED = 1;
 }

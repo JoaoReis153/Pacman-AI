@@ -3,19 +3,18 @@ package pacman;
 import java.util.Arrays;
 import java.util.Random;
 
-import breakout.BreakoutNeuralNetwork;
 import utils.Commons;
 
 public class PacmanGeneticAlgorithm {
 
     private final Random random = new Random((int) (Math.random() * 10000));
     private final int POPULATION_SIZE = 100;
-    private final int NUM_GENERATIONS = 100;
-    private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
-    private double MUTATION_PERCENTAGE = 0.0;
+    private final int NUM_GENERATIONS = 1000;
+    private static final double INITIAL_MUTATION_PERCENTAGE = 0.02;
+    private double MUTATION_PERCENTAGE = 0.1;
     //private double MUTATION_PERCENTAGE = .8;
     private static final double MUTATION_RATE = 0.1;
-    private double SELECTION_PERCENTAGE = .2;
+    private double SELECTION_PERCENTAGE = .4;
     private int k_tournament = 5;
     private PacmanNeuralNetwork champion;
     private int seed ;
@@ -60,14 +59,17 @@ public class PacmanGeneticAlgorithm {
 
             Arrays.sort(population);
 
-            MUTATION_PERCENTAGE = Math.min(INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
-            if(MUTATION_PERCENTAGE == 0.68) System.out.println("Mutation percentage at it's maximum");
+
 
 
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 
-            if(i % 10 == 0)
-                System.out.println("Gen: " + i);
+            if(i % 10 == 0) {
+                System.out.print("Gen: " + i + "    ");
+                System.out.println("(" + population[0].getFitness() + ") - (" + population[population.length - 1].getFitness() + ")");
+            }
+
+
 
             updateChamp(population[0]);
 
@@ -83,7 +85,7 @@ public class PacmanGeneticAlgorithm {
                     PacmanNeuralNetwork[] children;
 
                     //Crossover
-                    children = crossover(parent1, parent2);
+                    children = crossover(parent1, parent2, 0);
 
                     //Mutation
                     newGeneration[j] = mutate(children[0]);
@@ -111,8 +113,7 @@ public class PacmanGeneticAlgorithm {
         return individual;
     }
 
-
-    private PacmanNeuralNetwork[] crossover(PacmanNeuralNetwork parent1, PacmanNeuralNetwork parent2) {
+    private PacmanNeuralNetwork[] crossover(PacmanNeuralNetwork parent1, PacmanNeuralNetwork parent2, int option) {
         double[] genes1 = parent1.getNeuralNetwork();
         double[] genes2 = parent2.getNeuralNetwork();
         double[] child1 = new double[genes1.length];
@@ -121,15 +122,27 @@ public class PacmanGeneticAlgorithm {
         int crossoverPoint = (int) (random.nextDouble() * genes1.length);
 
         for (int i = 0; i < genes1.length; i++) {
-            child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
-            child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
+
+            if(option % 2 == 0) {
+                child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
+                child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
+                //child1[i] = (random.nextDouble() < .5) ? genes1[i] : genes2[i];
+                //child2[i] = (random.nextDouble() < .5) ? genes2[i] : genes1[i];
+            } else {
+                double r = (genes1[i] + genes2[i]) / 2;
+                child1[i] = r;
+                child2[i] = r;
+            }
+
+
+
         }
 
         PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1);
         PacmanNeuralNetwork offspring2 = new PacmanNeuralNetwork(child2);
         return new PacmanNeuralNetwork[]{offspring1, offspring2};
-
     }
+
 
 
     // Realiza seleção por torneio

@@ -108,9 +108,15 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     @Override
 	public int nextMove(int[] inputValues) {
         double[] output = forward(inputValues);
-		if(output[0] > output[1]) 
-			return 1;
-		return 2;
+        double maxValue = output[0];
+        int max = 0;
+        for(int i = 0; i  < output.length; i++) {
+            if( output[i] > maxValue) {
+                max = i;
+                maxValue = output[i];
+            };
+        }
+        return max;
 	}
 
     private double sigmoid(double x) {
@@ -122,9 +128,9 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
     }
 
     public void calculateFitness(int seed) {
-    	BreakoutBoard bb = new BreakoutBoard(this, false, seed);
-    	bb.runSimulation();
-    	this.fitness = bb.getFitness();
+        BreakoutBoard bb = new BreakoutBoard(this, false, seed);
+        bb.runSimulation();
+        this.fitness = bb.getFitness();
     }
 
 
