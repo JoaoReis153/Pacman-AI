@@ -6,7 +6,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		int seed = 265;
+		int seed = 123;
 
 		BreakoutGeneticAlgorithm ga = new BreakoutGeneticAlgorithm(seed);
 		BreakoutNeuralNetwork nn = ga.getChampion();

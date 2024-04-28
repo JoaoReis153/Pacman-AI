@@ -8,14 +8,14 @@ import utils.Commons;
 
 public class PacmanGeneticAlgorithm {
 
-    private final Random random = new Random((int) (Math.random() * 10000));
+    private final Random random = new Random();
     private final int POPULATION_SIZE = 100;
     private final int NUM_GENERATIONS = 100;
     private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
-    private double MUTATION_PERCENTAGE = 0.05;
+    private double MUTATION_PERCENTAGE = 0.1;
     private static final double MUTATION_RATE = 0.1;
     private double SELECTION_PERCENTAGE = .3;
-    private int k_tournament = 4;
+    private int k_tournament = 5;
     private PacmanNeuralNetwork champion;
     private final int seed ;
 
@@ -28,6 +28,7 @@ public class PacmanGeneticAlgorithm {
     public PacmanGeneticAlgorithm(int seed) {
         generatePopulation();
         this.seed = seed;
+        this.random.setSeed(seed);
         this.champion = search();
     }
 
@@ -58,10 +59,15 @@ public class PacmanGeneticAlgorithm {
 
             Arrays.sort(population);
 
+            //MUTATION_PERCENTAGE = Math.min(0.05 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.3);
+            //if(MUTATION_PERCENTAGE == 0.3) System.out.println("Mutation percentage at it's maximum");
+
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 
             if(i % 10 == 0)
                 System.out.println("Gen: " + i);
+
+
 
             updateChamp(population[0]);
 
@@ -95,7 +101,7 @@ public class PacmanGeneticAlgorithm {
 
     private PacmanNeuralNetwork mutate(PacmanNeuralNetwork individual) {
         double[] genes = individual.getNeuralNetwork();
-        if (Math.random() < MUTATION_RATE) {
+        if (random.nextDouble() < MUTATION_RATE) {
             for (int i = 0; i < MUTATION_PERCENTAGE * Commons.PACMAN_NETWORK_SIZE; i++) {
                 int index = (int) (random.nextDouble() * Commons.PACMAN_NETWORK_SIZE);
                 genes[index] = random.nextDouble() * 2 - 1;
@@ -112,11 +118,16 @@ public class PacmanGeneticAlgorithm {
         double[] child1 = new double[genes1.length];
         double[] child2 = new double[genes2.length];
 
-        int crossoverPoint = (int) (random.nextDouble() * genes1.length);
+        int crossoverPoint = (int) (random.nextDouble() * (genes1.length/2));
 
         for (int i = 0; i < genes1.length; i++) {
-            child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
-            child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
+            if ( i > genes1.length/2 - crossoverPoint && i < genes2.length/2 + crossoverPoint) {
+                child1[i] = genes1[i];
+                child2[i] = genes2[i];
+            } else {
+                child1[i] = genes2[i];
+                child2[i] = genes1[i];
+            }
         }
 
         PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1);

@@ -1,19 +1,27 @@
 package pacman;
 
 
+import general.Score;
+import utils.Commons;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
 public class Main {
 
     public static void main(String[] args) {
-
-        int seed = 547;
-
+        int seed = Commons.SEED;
+/*
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(seed);
         PacmanNeuralNetwork nn = ga.getChampion();
+        nn.calculateFitness(seed);
+        System.out.println("Best fitness: " + nn.getFitness());
         new Pacman(nn, true, seed);
-        /*
-        int n = 500;
+       */
+        int n = 11539814;
         ArrayList<Score> scoreList = new ArrayList<>();
-        for(int i = n; i < n * 2; i++) {
+        for(int i = n; i < n + 200; i++) {
 
             PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(i);
             PacmanNeuralNetwork nn = ga.getChampion();
@@ -28,7 +36,7 @@ public class Main {
         for(int i = 0; i < scoreList.size(); i++) {
             System.out.println(scoreList.get(i));
         }
-        */
+
 
 
     }

@@ -77,6 +77,9 @@ public class BreakoutGeneticAlgorithm {
 
 				loadPopulationFitness();
 
+				MUTATION_PERCENTAGE = Math.min(0.05 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.3);
+				if(MUTATION_PERCENTAGE == 0.68) System.out.println("Mutation percentage at it's maximum");
+
 				Arrays.sort(population);
 
 				if(noEvolutionInterval > 20) {

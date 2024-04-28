@@ -3,6 +3,8 @@ package general;
 import utils.Commons;
 import utils.GameController;
 
+import java.util.Random;
+
 public abstract class NeuralNetwork implements GameController, Comparable<NeuralNetwork> {
 
     private final int inputDim;
@@ -13,6 +15,7 @@ public abstract class NeuralNetwork implements GameController, Comparable<Neural
     private double[][] outputWeights;
     private double[] outputBiases;
 
+    private Random random = new Random(Commons.SEED);
     private double fitness = 0.0;
 
     public NeuralNetwork(int inputDim, int hiddenDim, int outputDim) {
@@ -87,22 +90,22 @@ public abstract class NeuralNetwork implements GameController, Comparable<Neural
         hiddenBiases = new double[hiddenDim];
         for (int i = 0; i < inputDim; i++) {
             for (int j = 0; j < hiddenDim; j++) {
-                hiddenWeights[i][j] = ((Math.random() * 2) - 1);
+                hiddenWeights[i][j] = ((random.nextDouble() * 2) - 1);
             }
         }
         for (int i = 0; i < hiddenDim; i++) {
-            hiddenBiases[i] = ((Math.random() * 2) - 1);
+            hiddenBiases[i] = ((random.nextDouble() * 2) - 1);
         }
 
         outputWeights = new double[hiddenDim][outputDim];
         outputBiases = new double[outputDim];
         for (int i = 0; i < hiddenDim; i++) {
             for (int j = 0; j < outputDim; j++) {
-                outputWeights[i][j] = ((Math.random() * 2) - 1);
+                outputWeights[i][j] = ((random.nextDouble() * 2) - 1);
             }
         }
         for (int i = 0; i < outputDim; i++) {
-            outputBiases[i] = ((Math.random() * 2) - 1);
+            outputBiases[i] = ((random.nextDouble() * 2) - 1);
         }
     }
 
