@@ -79,8 +79,8 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
         }
     }
 
-	public double[] forward(int[] inputValues) {
-		//double[] inputValues = normalize(inputValues);
+	public double[] forward(int[] givenValues) {
+		double[] inputValues = normalize(givenValues);
 
 		// First hidden layer
 		double[] hiddenLayer = new double[hiddenDim];
@@ -103,8 +103,21 @@ public class BreakoutNeuralNetwork implements GameController, Comparable<Breakou
 		return output;
 	}
 
+    private double[] normalize(int[] inputValues) {
+        double[] normalizedValues = new double[inputDim];
+        normalizedValues[0] = (double) inputValues[0] / Commons.WIDTH;
+        normalizedValues[1] = (double) inputValues[1] / Commons.HEIGHT;
+        normalizedValues[2] = inputValues[2];
 
-    
+        normalizedValues[3] = (double) inputValues[3] / Commons.WIDTH;
+        normalizedValues[4] = (double) inputValues[4] / Commons.HEIGHT;
+
+        normalizedValues[5] = (double) inputValues[5] / Commons.WIDTH;
+        normalizedValues[6] = (double) inputValues[6] / Commons.HEIGHT;
+        return normalizedValues;
+    }
+
+
     @Override
 	public int nextMove(int[] inputValues) {
         double[] output = forward(inputValues);
