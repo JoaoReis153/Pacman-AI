@@ -59,8 +59,8 @@ public class PacmanGeneticAlgorithm {
 
             Arrays.sort(population);
 
-            //MUTATION_PERCENTAGE = Math.min(0.05 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.3);
-            //if(MUTATION_PERCENTAGE == 0.3) System.out.println("Mutation percentage at it's maximum");
+            MUTATION_PERCENTAGE = Math.min(0.05 * INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.3);
+            if(MUTATION_PERCENTAGE == 0.3) System.out.println("Mutation percentage at it's maximum");
 
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 

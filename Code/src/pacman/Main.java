@@ -12,14 +12,14 @@ public class Main {
 
     public static void main(String[] args) {
         int seed = Commons.SEED;
-/*
+
         PacmanGeneticAlgorithm ga = new PacmanGeneticAlgorithm(seed);
         PacmanNeuralNetwork nn = ga.getChampion();
         nn.calculateFitness(seed);
         System.out.println("Best fitness: " + nn.getFitness());
         new Pacman(nn, true, seed);
-       */
-        int n = 1993319814;
+/*
+        int n = 1923319814;
         ArrayList<Score> scoreList = new ArrayList<>();
         for(int i = n; i < n + 200; i++) {
             System.out.println();
@@ -32,9 +32,9 @@ public class Main {
             Collections.sort(scoreList);
             System.out.println("Best: ");
             System.out.println(scoreList.getFirst());
-            if(i - n > 10) {
+            if(i - n > 11) {
                 System.out.println("Top 10: ");
-                for(int k = 0; k < scoreList.size(); k++) {
+                for(int k = 0; k < 10; k++) {
                     System.out.println(scoreList.get(k+1));
                 }
             }
@@ -45,7 +45,7 @@ public class Main {
             System.out.println(scoreList.get(i));
         }
 
-
+       */
 
     }
 }
