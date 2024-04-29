@@ -119,23 +119,10 @@ public class PacmanGeneticAlgorithm {
         double[] child1 = new double[genes1.length];
         double[] child2 = new double[genes2.length];
 
-        int crossoverPoint = (int) (random.nextDouble() * genes1.length);
-
         for (int i = 0; i < genes1.length; i++) {
-
-            if(option % 2 == 0) {
-                child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
-                child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
-                //child1[i] = (random.nextDouble() < .5) ? genes1[i] : genes2[i];
-                //child2[i] = (random.nextDouble() < .5) ? genes2[i] : genes1[i];
-            } else {
-                double r = (genes1[i] + genes2[i]) / 2;
-                child1[i] = r;
-                child2[i] = r;
-            }
-
-
-
+            boolean r = (random.nextDouble() < .5);
+            child1[i] = r ? genes1[i] : genes2[i];
+            child2[i] = r ? genes2[i] : genes1[i];
         }
 
         PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1);
