@@ -12,12 +12,12 @@ public class BreakoutGeneticAlgorithm {
 		private int seed;
 
 		private static final int POPULATION_SIZE = 100;
-		private static final int NUM_GENERATIONS = 1000;
-		private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
-		private double MUTATION_PERCENTAGE = 0.1;
-		private static final double MUTATION_RATE = 0.2;
-		private static final double SELECTION_PERCENTAGE = 0.1;
-		private static final int K_TOURNAMENT = 3;
+		private static final int NUM_GENERATIONS = 100;
+		//private static final double INITIAL_MUTATION_PERCENTAGE = 0.05;
+		private double MUTATION_PERCENTAGE = 0.05;
+		private static final double MUTATION_RATE = 0.3;
+		private static final double SELECTION_PERCENTAGE = 0.3;
+		private static final int K_TOURNAMENT = 4;
 
 		private int noEvolutionInterval = 0;
 
@@ -73,9 +73,9 @@ public class BreakoutGeneticAlgorithm {
 
 				BreakoutNeuralNetwork[] newGeneration = new BreakoutNeuralNetwork[POPULATION_SIZE];
 
+				System.out.println("Gen: " + i);
+
 				if(i % 10 == 0) {
-					MUTATION_PERCENTAGE = Math.min(INITIAL_MUTATION_PERCENTAGE * noEvolutionInterval, 0.7);
-					System.out.print("Gen: " + i + "    ");
 					System.out.println("(" + population[0].getFitness() + ") - (" + population[population.length - 1].getFitness() + ")");
 
 				}
@@ -154,8 +154,9 @@ public class BreakoutGeneticAlgorithm {
 				for (int i = 0; i < genes1.length; i++) {
 
 					if(option == 0) {
-						child1[i] = (random.nextDouble() < .5) ? genes1[i] : genes2[i];
-						child2[i] = (random.nextDouble() < .5) ? genes2[i] : genes1[i];
+						boolean r = (random.nextDouble() < .5);
+						child1[i] = r ? genes1[i] : genes2[i];
+						child2[i] = r ? genes2[i] : genes1[i];
 					} else if(option % 2 == 0) {
 						child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
 						child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
