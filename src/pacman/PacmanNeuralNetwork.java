@@ -30,27 +30,6 @@ public class PacmanNeuralNetwork implements GameController, Comparable<PacmanNeu
             throw new IllegalArgumentException("Incorrect size of input values array");
         }
     }
-    public double[] softmax(double[] inputs) {
-        double max = Double.NEGATIVE_INFINITY;
-        for (double input : inputs) {
-            if (input > max) {
-                max = input; // To prevent overflow
-            }
-        }
-
-        double sum = 0.0;
-        double[] exps = new double[inputs.length];
-        for (int i = 0; i < inputs.length; i++) {
-            exps[i] = Math.exp(inputs[i] - max); // Subtract max for numerical stability
-            sum += exps[i];
-        }
-
-        for (int i = 0; i < exps.length; i++) {
-            exps[i] /= sum;
-        }
-
-        return exps;
-    }
 
     @Override
     public int nextMove(int[] currentState) {
@@ -59,11 +38,11 @@ public class PacmanNeuralNetwork implements GameController, Comparable<PacmanNeu
         double[] output = forward(currentState);
         for(int i = 0; i  < output.length; i++) {
             if( output[i] > maxValue) {
-                max = i+1;
+                max = i;
                 maxValue = output[i];
             };
         }
-        return maxValue == 0.25 ? 0 : max;
+        return max;
     }
 
     private double[] forward(int[] currentState) {
@@ -84,7 +63,7 @@ public class PacmanNeuralNetwork implements GameController, Comparable<PacmanNeu
             }
             output[i] = sigmoid(output[i] + outputBiases[i]);
         }
-        output = softmax(output);
+
         return output;
     }
 
@@ -168,7 +147,7 @@ public class PacmanNeuralNetwork implements GameController, Comparable<PacmanNeu
 
     @Override
     public int compareTo(PacmanNeuralNetwork o) {
-        return Double.compare(getFitness(), o.getFitness());
+        return Double.compare(o.getFitness(), getFitness());
     }
 
 }
