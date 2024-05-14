@@ -6,12 +6,11 @@ import java.util.Arrays;
 
 public class PacmanGeneticAlgorithm {
 
-    private final int POPULATION_SIZE = 100;
+    private final int POPULATION_SIZE = 250;
     private final int NUM_GENERATIONS = 100;
-    private double MUTATION_CHANCE = .8;
-    private double MUTATION_PERCENTAGE = .8;
-    private double CUTOFF = .2;
-    private double SELECTION_PARENTS_PERCENTAGE = .2;
+    private double MUTATION_CHANCE = .2;
+    private double MUTATION_PERCENTAGE = .2;
+    private double SELECTION_PERCENTAGE = .2;
     private int k_tournament = 5;
 
     private int seed ;
@@ -37,41 +36,30 @@ public class PacmanGeneticAlgorithm {
             generatePopulationFitness(population);
             Arrays.sort(population);
 
-            System.out.println(population[POPULATION_SIZE-1].getFitness());
+            System.out.println(population[0].getFitness());
 
             PacmanNeuralNetwork[] newGeneration = new PacmanNeuralNetwork[POPULATION_SIZE];
 
+            int cutoff = (int) (POPULATION_SIZE * SELECTION_PERCENTAGE);
+
             for (int j = 0; j < POPULATION_SIZE; j += 2) {
+                if(j < cutoff) {
+                    newGeneration[j] = population[j];
+                    newGeneration[j + 1] = population[j + 1];
+                } else {
+                    PacmanNeuralNetwork parent1 = selectParent();
+                    PacmanNeuralNetwork parent2 = selectParent();
+                    PacmanNeuralNetwork[] children = crossover(parent1, parent2);
 
-                PacmanNeuralNetwork parent1 = selectParent();
-                PacmanNeuralNetwork parent2 = selectParent();
-                PacmanNeuralNetwork[] children = crossover(parent1, parent2);
-
-                newGeneration[j] = mutate(children[0]);
-                newGeneration[j + 1] = mutate(children[1]);
-
+                    newGeneration[j] = mutate(children[0]);
+                    newGeneration[j + 1] = mutate(children[1]);
+                }
             }
-
-            if( i != NUM_GENERATIONS - 1)
-                createNewPopulation(newGeneration);
+            population = newGeneration;
         }
         System.out.println("-------");
 
-        return population[POPULATION_SIZE - 1];
-    }
-
-    private void createNewPopulation(PacmanNeuralNetwork[] newgeneration) {
-
-        generatePopulationFitness(newgeneration);
-        Arrays.sort(newgeneration);
-        int cutoff = (int) (POPULATION_SIZE * CUTOFF);
-
-        int bestIndividuals = POPULATION_SIZE - cutoff;
-
-        for (int i = 0; i != cutoff; i++) {
-            population[i] = newgeneration[i + bestIndividuals];
-        }
-
+        return population[0];
     }
 
     private PacmanNeuralNetwork mutate(PacmanNeuralNetwork individual) {
@@ -93,11 +81,10 @@ public class PacmanGeneticAlgorithm {
         double[] child1 = new double[genes1.length];
         double[] child2 = new double[genes2.length];
 
-        int crossoverPoint = (int) (Math.random() * genes1.length);
-
         for (int i = 0; i < genes1.length; i++) {
-            child1[i] = (i < crossoverPoint) ? genes1[i] : genes2[i];
-            child2[i] = (i < crossoverPoint) ? genes2[i] : genes1[i];
+            boolean r = (Math.random() < .5);
+            child1[i] = r ? genes1[i] : genes2[i];
+            child2[i] = r ? genes2[i] : genes1[i];
         }
 
         PacmanNeuralNetwork offspring1 = new PacmanNeuralNetwork(child1, seed);
@@ -108,17 +95,18 @@ public class PacmanGeneticAlgorithm {
 
 
     // Realiza seleção por torneio
-    private PacmanNeuralNetwork selectParent() {
+    public PacmanNeuralNetwork selectParent() {
 
-        PacmanNeuralNetwork[] possibleParents = new PacmanNeuralNetwork[k_tournament];
+        PacmanNeuralNetwork best = population[(int) (Math.random() * POPULATION_SIZE)];
 
-        for (int i = 0; i != k_tournament; i++) {
-            possibleParents[i] = population[(int) (POPULATION_SIZE - (Math.random() * POPULATION_SIZE * SELECTION_PARENTS_PERCENTAGE))];
+        for (int i = 1; i < k_tournament; i++) {
+            PacmanNeuralNetwork c = population[(int) (Math.random() * POPULATION_SIZE)];
+
+            if (c.getFitness() > best.getFitness())
+                best = c;
+
         }
-
-        Arrays.sort(possibleParents);
-
-        return possibleParents[k_tournament - 1];
+        return best;
 
     }
 
